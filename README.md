@@ -1,2 +1,2 @@
 # Memory_Game
-This game challenges your memory and visual perception. Five balls will display a random sequence of red, green, and blue colors. After a brief delay, the colors will disappear. Your task is to accurately click on the circles that were originally red.ssssss
+## This game challenges your memory and visual perception. Five balls will display a random sequence of red, green, and blue colors. After a brief delay, the colors will disappear. Your task is to accurately click on the circles that were originally red.
