@@ -22,34 +22,97 @@
         aspect-ratio: 1/1;
         width: 100%;
     }
+    .flex{
+        display: flex;
+        justify-content: space-between;
+    }
   </style>  
 </head>
 <body>
     <div class="container">
         <h1>Memory Game</h1>
         <div class="main">
-            <h2 class="points">Pts:</h2>
+            <div class="flex">
+               <h2 class="question"></h2>
+                <h2 class="points">Pts:</h2>
+            </div>
+
             <div class="circle-box"></div>
+
         </div>
     </div>
     <script>
         window.onload=function(){
+            function getRandomCircle(circles){
+                return circles[Math.ceil(Math.random()*100)%circles.length]
+            }
+            function getColor(){
+                let colors=['red','blue']
+                return colors[Math.ceil(Math.random()*100)%colors.length]
+            }
             function makeCircle(root){
                 let div=document.createElement('div');
                 div.classList.add('circle')
                 root.appendChild(div)
                 return {
                     isOpen:false,
-                    color:"red",
-                    div
+                    color:getColor(),
+                    div,
+                    toggle(){
+
+                        this.isOpen=!this.isOpen
+                        this.div.style.backgroundColor=this.isOpen?this.color:"brown"
+                    }
                 }
             }
             let circleBox=document.querySelector(".circle-box")
             // let c=makeCircle(circleBox)
+            let circles=[]
             for(let i=0;i<10;i++){
-                makeCircle(circleBox)
+               let c = makeCircle(circleBox)
+               c.toggle()
+
+               circles.push(c)
+               c.div.onclick=handler;
+               console.log(c)
             }
-            // console.log(c)
+            setTimeout(()=>{
+                circles.forEach(c=>c.toggle())
+                showQuestion()
+            },2000)
+
+            console.log(c.color)
+            let currentCircle=getRandomCircle(circles)
+            let questionColor=currentCircle.color
+            let count=circles.filter(c=>c.color==questionColor).length
+            let circlesClicked=0;
+            let questionBox=document.querySelector('.question')
+            function showQuestion(){
+                
+                questionBox.textContent=`choose circle with the color ${questionColor}`
+            }
+            function getCircleFromDOM(domObj,circles){
+                return circles.filter(c=>c.div==domObj)[0]
+
+            }
+            function handler(e){
+                // console.log(e.target)
+                let c=getCircleFromDOM(e.target,circles)
+                if(c.color!=questionColor){
+                    circles.forEach(c=>!c.isOpen?c.toggle():null)
+                    questionBox.textContent=`You lose`
+                }
+                console.log(c.color)
+                if(!c.isOpen){
+                    c.toggle()
+                    circlesClicked++;
+                    if(circlesClicked==count){
+                        questionBox.textContent=`You Win`
+                        circles.forEach(c=>!c.isOpen?c.toggle():null)
+                    }
+                }
+            }
+            
             // circleBox.appendChild(c.div)
         }
         let c={
